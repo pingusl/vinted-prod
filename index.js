@@ -22,6 +22,6 @@ app.all("*", (req, res) => {
   res.status(400).json({ message: "Requête invalide" });
 });
 //----Running server----//
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server has started 🚀 on port 3000");
 });
