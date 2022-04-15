@@ -1,6 +1,6 @@
 //----Module loading----//
 const express = require("express");
-require("dotenv").config();
+require("dotenv").config(); //Permet d'activer les variables d'environnement du fichier .env
 const formidable = require("express-formidable");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
@@ -24,5 +24,5 @@ app.all("*", (req, res) => {
 });
 //----Running server----//
 app.listen(process.env.PORT, () => {
-  console.log("Server has started 🚀 on port 3000");
+  console.log("Server has started 🚀 ");
 });
