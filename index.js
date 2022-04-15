@@ -1,5 +1,6 @@
 //----Module loading----//
 const express = require("express");
+require("dotenv").config();
 const formidable = require("express-formidable");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
@@ -8,7 +9,7 @@ const app = express();
 app.use(formidable());
 app.use(morgan("dev"));
 //----Mongoose connection----//
-mongoose.connect("mongodb://localhost/vinted");
+mongoose.connect(process.env.MONGODB_URL);
 //----Models loading----//
 const user = require("./models/User");
 const offer = require("./models/Offer");
