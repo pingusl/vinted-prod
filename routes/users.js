@@ -9,6 +9,7 @@ const User = require("../models/User");
 
 router.post("/user/signup", async (req, res) => {
   try {
+    console.log(req);
     //On vérifier qu'on envoie bien un username
     if (req.fields.username === undefined) {
       res.status(400).json({ message: "Missing parameter" });

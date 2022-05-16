@@ -7,7 +7,7 @@ const isAuthenticated = async (req, res, next) => {
   if (req.headers.authorization) {
     //je continue la suite de mes vérifications
     const user = await User.findOne({
-      token: req.headers.authorization.replace("Bearer ", ""),
+      token: req.headers.authorization.replace("Bearer ", ""), //trouve l'utilisateur dans la base a partir de la clef d'authorisation possible gràce à la suppression du bearer dans header.authorization
     });
 
     if (user) {
