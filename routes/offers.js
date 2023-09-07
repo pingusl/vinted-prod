@@ -17,30 +17,10 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-//----Middleware isAuthenticate----//
-//----A mettre dans un dossier middleWare pour pouvoir le réutiliser sur d'autre route
-//----Ajouter dans le req un req.user que j'ai réalisé dans la route /offer/publish
-// const isAuthenticated = async (req, res, next) => {
-//   if (req.headers.authorization) {
-//     //----Find User----//
-//     const tokenToFind = req.headers.authorization.replace("Bearer ", ""); // Supprime le "Bearer " de la chaîne de caractère pour trouver la clef.
-//     const user = await User.findOne({ token: tokenToFind });
-//     if (user) {
-//       req.user = user;
-//     } else {
-//       res.status(401).json({
-//         error: "authentification failed...Redirection vers page de login",
-//       });
-//     }
-//     next();
-//   } else {
-//     return res.status(401).json({
-//       error: "authentification failed...Redirection vers page de login",
-//     });
-//   }
-// };
+
 //----Route construction----//
 Router.post("/offer/publish", isAuthenticated, async (req, res) => {
+  console.log("offers L44");
   try {
     //----Create newOffer----//
     const newOffer = new Offer({
@@ -81,50 +61,57 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
 });
 
 Router.get("/offers", isAuthenticated, async (req, res) => {
-  //----A Faire ajouter un try Catch----//
-  const pageNumber = req.query.page;
-  const title = req.query.title;
-  let priceMini = 0;
-  let priceMaxi = 0;
-  if (req.query.priceMin) {
-    priceMini = Number(req.query.priceMin);
-  }
-  if (req.query.priceMax) {
-    priceMaxi = Number(req.query.priceMax);
-  }
-  const sort = req.query.sort;
-
-  //----Gestion de la pagination----//
-  let skip = 0;
-  let limit = 5;
-  const offersCount = await Offer.find({
-    product_price: { $gte: priceMini, $lte: priceMaxi },
-    product_name: new RegExp(title, "i"),
-  }).countDocuments();
-
-  if (offersCount > limit) {
-    for (i = 1; i < pageNumber; i++) {
-      skip += limit;
+  console.log("Offers L64");
+  try {
+    const pageNumber = req.query.page;
+    const title = req.query.title;
+    let priceMini = 0;
+    let priceMaxi = 0;
+    if (req.query.priceMin) {
+      priceMini = Number(req.query.priceMin);
     }
-  }
+    if (req.query.priceMax) {
+      priceMaxi = Number(req.query.priceMax);
+    }
+    const sort = req.query.sort;
 
-  // console.log(`title  ${title}`);
-  // console.log(`prix mini  ${priceMini}`);
-  // console.log(`prix maxi  ${priceMaxi}`);
-  //----création du filtre----//
-  const offers = await Offer.find({
-    product_price: { $gte: priceMini, $lte: priceMaxi },
-    product_name: new RegExp(title, "i"),
-  })
-    .select("product_name product_price product_description")
-    .sort(sort)
-    .limit(limit)
-    .skip(skip); //----A Faire gérer la valeur su skip par un calcul plutot que par une boucle puis supprimer la boucle
-  res.status(200).json(offers);
-  console.log(`${offers}`);
+    //----Gestion de la pagination----//
+    let skip = 0;
+    let limit = 5;
+    const offersCount = await Offer.find({
+      product_price: { $gte: priceMini, $lte: priceMaxi },
+      product_name: new RegExp(title, "i"),
+    }).countDocuments();
+
+    if (offersCount > limit) {
+      for (i = 1; i < pageNumber; i++) {
+        skip += limit;
+      }
+    }
+
+    console.log(`Offers L113 title:  ${title}`);
+    console.log(`Offers L114 prix mini:  ${priceMini}`);
+    console.log(`Offers L115 prix maxi:  ${priceMaxi}`);
+    //----création du filtre----//
+    const offers = await Offer.find({
+      product_price: { $gte: priceMini, $lte: priceMaxi },
+      product_name: new RegExp(title, "i"),
+    })
+      .select(
+        "product_name product_price product_description product_details product_image"
+      )
+      .sort(sort)
+      .limit(limit)
+      .skip(skip); //----A Faire gérer la valeur su skip par un calcul plutot que par une boucle puis supprimer la boucle
+    res.status(200).json(offers);
+    console.log(`Offers L126 ${offers}`);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 Router.get("/offer/:id", async (req, res) => {
+  console.log("offers 133");
   try {
     const idLength = req.params.id;
     //----Check id----//
