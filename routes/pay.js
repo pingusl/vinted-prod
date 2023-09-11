@@ -8,16 +8,18 @@ const Router = express.Router();
 Router.use(formidableMiddleware());
 Router.use(cors());
 //----Route definition----//
-Router.post("/pay", async (req, res) => {
+Router.post("/payment", async (req, res) => {
+  console.log("/payment L12:");
   try {
     //Réception du token donné par l'API stripe et transmis du front
-    const stripeToken = req.fields.stripToken;
+    const { token, amount, title } = req.fields;
+    console.log("stripeToken:", token);
     //créer la transaction
     const response = await stripe.charges.create({
-      amount: 2000,
+      amount: amount * 100,
       currency: "eur",
-      description: "Description de l'objet acheté",
-      source: stripeToken,
+      description: title,
+      source: token,
     });
     console.log(response.status);
     res.json(response);
