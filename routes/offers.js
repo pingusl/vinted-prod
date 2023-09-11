@@ -18,7 +18,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-//----Route construction----//
+//----Publish----//
 Router.post("/offer/publish", isAuthenticated, async (req, res) => {
   console.log("offers L23 req", req);
   console.log("offers L24 req.fields:", req.fields);
@@ -62,6 +62,7 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
   }
 });
 
+//----Offers-----//
 Router.get("/offers", async (req, res) => {
   console.log("Offers L64");
   try {
@@ -112,6 +113,7 @@ Router.get("/offers", async (req, res) => {
   }
 });
 
+//----Offer-----//
 Router.get("/offer/:id", async (req, res) => {
   console.log("offers 133");
   try {
@@ -120,7 +122,7 @@ Router.get("/offer/:id", async (req, res) => {
     if (Number(idLength.length) === 24) {
       //----Find offer filter by product_detail & product_image----//
       const offer = await Offer.find({ _id: req.params.id }).select(
-        "product_details product_image"
+        "product_details product_image product_name product_price product_description"
       ); //Ajouter un polpulate pour afficher le username et l'email du user en limitant la transmission du hash et du salt.
       res.status(200).json(offer);
     } else {
@@ -130,5 +132,6 @@ Router.get("/offer/:id", async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
 //---Export du router----//
 module.exports = Router;
