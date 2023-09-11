@@ -20,7 +20,8 @@ cloudinary.config({
 
 //----Route construction----//
 Router.post("/offer/publish", isAuthenticated, async (req, res) => {
-  console.log("offers L44");
+  console.log("offers L23 req", req);
+  console.log("offers L24 req.fields:", req.fields);
   try {
     //----Create newOffer----//
     const newOffer = new Offer({
@@ -34,6 +35,7 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
         { couleur: req.fields.color },
         { emplacement: req.fields.city },
       ],
+      product_image: { secure_url: req.fields.picture },
 
       owner: req.user,
     });
@@ -60,7 +62,7 @@ Router.post("/offer/publish", isAuthenticated, async (req, res) => {
   }
 });
 
-Router.get("/offers", isAuthenticated, async (req, res) => {
+Router.get("/offers", async (req, res) => {
   console.log("Offers L64");
   try {
     const pageNumber = req.query.page;

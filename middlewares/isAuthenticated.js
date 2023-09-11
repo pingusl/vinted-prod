@@ -1,9 +1,9 @@
 const User = require("../models/User");
 
 const isAuthenticated = async (req, res, next) => {
-  console.log("Hello from isAuthenticated");
+  console.log("Hello from isAuthenticated token:", req.headers.authorization);
   //Sans le next, la requête va rester "bloquée" dans la fonction isAuthenticated
-  //console.log(req.headers.authorization);
+  // console.log(req.headers.authorization);
   // console.log(req.headers);
   if (req.headers.authorization) {
     //je continue la suite de mes vérifications
